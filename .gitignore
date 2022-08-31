@@ -4,4 +4,6 @@
 
 *.png
 
-*.mge
+*.mge!
+
+.vscode

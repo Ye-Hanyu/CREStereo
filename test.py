@@ -5,6 +5,7 @@ import megengine.functional as F
 import argparse
 import numpy as np
 import cv2
+import time
 
 from nets import Model
 
@@ -91,11 +92,16 @@ if __name__ == "__main__":
     left_img = cv2.resize(left, (eval_w, eval_h), interpolation=cv2.INTER_LINEAR)
     right_img = cv2.resize(right, (eval_w, eval_h), interpolation=cv2.INTER_LINEAR)
 
-    pred = inference(left_img, right_img, model_func, n_iter=20)
+
+    t1 = time.time()
+    pred = inference(left_img, right_img, model_func, n_iter=5)
+    t2 = time.time()
+    print(t2 - t1)
+
 
     t = float(in_w) / float(eval_w)
     disp = cv2.resize(pred, (in_w, in_h), interpolation=cv2.INTER_LINEAR) * t
-
+    np.save('./disp.npy', disp)
     disp_vis = (disp - disp.min()) / (disp.max() - disp.min()) * 255.0
     disp_vis = disp_vis.astype("uint8")
     disp_vis = cv2.applyColorMap(disp_vis, cv2.COLORMAP_INFERNO)
